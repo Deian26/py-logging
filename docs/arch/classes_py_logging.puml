@@ -1,0 +1,49 @@
+@startuml classes_py_logging
+set namespaceSeparator none
+class "ITimeProvider" as py_logging.time_provision.itime_provider.ITimeProvider {
+  _NOT_IMPL_ERROR_MSG : str
+  name : str
+  get_time_ms() -> float
+  {abstract}get_time_ns() -> int
+  get_time_s() -> float
+  get_time_us() -> float
+  {abstract}pause()
+  {abstract}start()
+  {abstract}stop()
+}
+class "LogLevel" as py_logging.logging_levels.LogLevel {
+  name
+}
+class "Logger" as py_logging.logger.Logger {
+  _LOG_FOOTER : str
+  _LOG_HEADER : str
+  _fp : TextIO
+  _time_provider
+  _tz : timezone
+  __del__()
+  __init__(fp: TextIO, tz: timezone, time_provider: ITimeProvider)
+  log(data: Any, level: LogLevel)
+  log_dbg(data: Any)
+  log_error(data: Any)
+  log_fatal(data: Any)
+  log_warning(data: Any)
+}
+class "OsTimeProvider" as py_logging.time_provision.providers.os_time_provider.OsTimeProvider {
+  get_time_ns() -> int
+  {abstract}pause()
+  {abstract}start()
+  {abstract}stop()
+}
+class "TimerTimeProvider" as py_logging.time_provision.providers.timer_time_provider.TimerTimeProvider {
+  _elapsed_time_ns : int
+  _start_time_ns : NoneType, Optional[int]
+  __init__() -> None
+  get_time_ns() -> int
+  pause()
+  start()
+  stop()
+}
+py_logging.time_provision.providers.os_time_provider.OsTimeProvider --|> py_logging.time_provision.itime_provider.ITimeProvider
+py_logging.time_provision.providers.timer_time_provider.TimerTimeProvider --|> py_logging.time_provision.itime_provider.ITimeProvider
+py_logging.time_provision.itime_provider.ITimeProvider --o py_logging.logger.Logger : _time_provider
+@enduml
