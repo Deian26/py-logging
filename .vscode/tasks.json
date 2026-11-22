@@ -1,0 +1,94 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build dist",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "-m",
+                "build",
+                "--wheel"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Generate API docs",
+            "type": "shell",
+            "command": "sphinx-apidoc",
+            "args": [
+                "-f",
+                "-o",
+                "docs/source/api",
+                "src/py_logging"
+            ]
+        },
+        {
+            "label": "Build HTML docs",
+            "type": "shell",
+            "command": "sphinx-build",
+            "args": [
+                "-b",
+                "html",
+                "docs/source",
+                "docs/build"
+            ]
+        },
+        {
+            "label": "Build docs",
+            "dependsOn": [
+                "Generate API docs",
+                "Build HTML docs"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "none",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate PUML",
+            "type": "shell",
+            "command": "pyreverse",
+            "args": [
+                "-o",
+                "puml",
+                "-p",
+                "py_logging",
+                "-f",
+                "ALL",
+                "py_logging"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/docs/arch",
+                "env": {
+                    "PYTHONPATH": "${workspaceFolder}/src"
+                }
+            }
+        },
+        {
+            "label": "Render PUML",
+            "type": "shell",
+            "command": "plantuml",
+            "args": [
+                "-tsvg",
+                "docs/arch/classes_py_logging.puml"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate UML",
+            "dependsOn": [
+                "Generate PUML",
+                "Move PUML",
+                "Render PUML"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        }
+    ]
+}
