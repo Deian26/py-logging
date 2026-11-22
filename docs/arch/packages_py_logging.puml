@@ -1,0 +1,24 @@
+@startuml packages_py_logging
+set namespaceSeparator none
+package "py_logging" as py_logging {
+}
+package "py_logging.logger" as py_logging.logger {
+}
+package "py_logging.logging_levels" as py_logging.logging_levels {
+}
+package "py_logging.time_provision" as py_logging.time_provision {
+}
+package "py_logging.time_provision.itime_provider" as py_logging.time_provision.itime_provider {
+}
+package "py_logging.time_provision.providers" as py_logging.time_provision.providers {
+}
+package "py_logging.time_provision.providers.os_time_provider" as py_logging.time_provision.providers.os_time_provider {
+}
+package "py_logging.time_provision.providers.timer_time_provider" as py_logging.time_provision.providers.timer_time_provider {
+}
+py_logging --> py_logging.logger
+py_logging --> py_logging.logging_levels
+py_logging.logger --> py_logging.logging_levels
+py_logging.logger --> py_logging.time_provision.itime_provider
+py_logging.time_provision --> py_logging.time_provision.itime_provider
+@enduml
